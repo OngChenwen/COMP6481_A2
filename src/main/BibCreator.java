@@ -10,16 +10,33 @@ import java.util.List;
 
 public class BibCreator {
     final static String path = "src/Files/Latex1.bib";
+    ArrayList<Integer> indexBegin = new ArrayList<>();
+    ArrayList<Integer> indexEnd = new ArrayList<>();
+    ArrayList<String> contentList = new ArrayList<>();
+    public BibCreator(){
+        // get each part from file (start with @)
+        //updated indexBegin & indexEnd list
+        fileSectionExtractionDetection();
 
-    // display line number for every part(start index & end index)
-    public static void fileSectionExtractionDetection(){
+        for(int i=0; i< indexBegin.size();i++){
+            extractInfo(indexBegin.get(i),indexEnd.get(i));
+        }
+
+        Iterator<String> iterator = contentList.iterator();
+
+        while (iterator.hasNext()){
+            System.out.println(iterator.next());
+
+        }
+
+
+    }
+    // line number for every part(start index & end index)
+    public void fileSectionExtractionDetection(){
         try{
             BufferedReader br = new BufferedReader(new FileReader(path));
             String input;
             int lineNum = 0,occurNum=0,endNum=0;
-
-            ArrayList<Integer> indexBegin = new ArrayList<>();
-            ArrayList<Integer> indexEnd = new ArrayList<>();
 
             while ((input = br.readLine()) != null){
                 lineNum++;
@@ -35,12 +52,33 @@ public class BibCreator {
 
             }
 
-            for(int i=0;i<indexBegin.size();i++){
+            /*for(int i=0;i<indexBegin.size();i++){
                 System.out.print("Begin Index (@ARTICLE): " + indexBegin.get(i) + "\n"
                 + "End index: " + indexEnd.get(i) + "\n");
                 System.out.println("*****************");
+            } */
+        }catch (IOException e){
+            System.out.println(e);
+        }
+    }
+
+    public void extractInfo(int startIndex, int endIndex){
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            String lines;
+            String content = "";
+
+            int lineNumber=0;
+
+            while ((lines=br.readLine()) != null){
+                lineNumber++;
+
+                if(lineNumber >=startIndex && lineNumber <= endIndex){
+                    content = content + lines;
+                }
             }
 
+            contentList.add(content);
 
         }catch (IOException e){
             System.out.println(e);
@@ -48,8 +86,10 @@ public class BibCreator {
     }
 
     public static void main(String[] args) {
-        fileSectionExtractionDetection();
+        new BibCreator();
+    }
+
 
 
     }
-}
+
