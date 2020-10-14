@@ -1,0 +1,31 @@
+@ARTICLE{
+
+8247289,
+author={J. Park and J. N. James and Q. Li and Y. Xu and W. Huang},
+journal={IEEE Transactions on Vehicular Technology},
+title={Optimal DASH-Multicasting over LTE},
+year={2018},
+volume={PP},
+number={99},
+pages={15-27},
+keywords={Forward error correction;Long Term Evolution;Maintenance engineering;Multicast communication;Resource management;Static VAr compensators;Streaming media;DASH;LTE;convex optimization;eMBMS;multicasting},
+doi={10.1109/TVT.2018.2789899},
+ISSN={0018-9545},
+month={January},
+}
+
+@ARTICLE{
+
+2380090,
+author={T. Jackson and A. H. Peterson and N. Wang},
+journal={IEEE Transactions on Computer Science},
+year={2017},
+volume={QQ},
+number={85},
+pages={1-12},
+title={Detecting Security Vulnerabilities in Binary Code},
+keywords={Security attacks;Binary code processing;Security error detection;Deep machine learning;Static analysis},
+doi={14.2408/TCS.2017.4746889},
+ISSN={0018-9545},
+month={May},
+}
