@@ -3,9 +3,7 @@ package main;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class BibCreator {
@@ -13,6 +11,7 @@ public class BibCreator {
     ArrayList<Integer> indexBegin = new ArrayList<>();
     ArrayList<Integer> indexEnd = new ArrayList<>();
     ArrayList<String> contentList = new ArrayList<>();
+
     public BibCreator(){
         // get each part from file (start with @)
         //updated indexBegin & indexEnd list
@@ -22,12 +21,14 @@ public class BibCreator {
             extractInfo(indexBegin.get(i),indexEnd.get(i));
         }
 
-        Iterator<String> iterator = contentList.iterator();
+        /*Iterator<String> iterator = contentList.iterator();
 
         while (iterator.hasNext()){
             System.out.println(iterator.next());
 
-        }
+        }*/
+
+        saveInfoInMap(contentList.get(0));
 
 
     }
@@ -85,11 +86,26 @@ public class BibCreator {
         }
     }
 
+    public void saveInfoInMap(String input){
+        String[] InputList= input.split(",");
+
+        for(String s : InputList){
+            if(s.contains("=")){
+                int indexOfEqual = s.indexOf('=');
+                String key = s.substring(0,indexOfEqual);
+                String value = s.substring((s.indexOf('{')+1),s.indexOf('}'));
+
+
+            }
+        }
+
+
+
+    }
+
     public static void main(String[] args) {
         new BibCreator();
     }
-
-
 
     }
 
