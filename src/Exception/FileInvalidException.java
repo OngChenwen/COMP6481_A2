@@ -1,14 +1,15 @@
 package Exception;
 
 public class FileInvalidException extends Exception {
-    String msg;
-
-    public FileInvalidException (String error){
-        this.msg = error;
+    public FileInvalidException() {
+        super("Error: Input file cannot be parsed due to missing information (i.e. month={}, title={}, etc.)");
     }
 
-    @Override
-    public String toString() {
-        return "FileInvalidException: " + msg;
+    public FileInvalidException(String s) {
+        super(s);
+    }
+
+    public String getMessage() {
+        return super.getMessage();
     }
 }
