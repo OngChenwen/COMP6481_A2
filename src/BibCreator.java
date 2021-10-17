@@ -1,108 +1,158 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
 public class BibCreator {
-    final static String path = "src/Files/Latex1.bib";
-    ArrayList<Integer> indexBegin = new ArrayList<>();
-    ArrayList<Integer> indexEnd = new ArrayList<>();
-    ArrayList<String> contentList = new ArrayList<>();
-
-    public BibCreator(){
-        // get each part from file (start with @)
-        //updated indexBegin & indexEnd list
-        fileSectionExtractionDetection();
-
-        for(int i=0; i< indexBegin.size();i++){
-            extractInfo(indexBegin.get(i),indexEnd.get(i));
-        }
-
-        /*Iterator<String> iterator = contentList.iterator();
-
-        while (iterator.hasNext()){
-            System.out.println(iterator.next());
-
-        }*/
-
-        saveInfoInMap(contentList.get(0));
-
-
-    }
-    // line number for every part(start index & end index)
-    public void fileSectionExtractionDetection(){
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            String input;
-            int lineNum = 0,occurNum=0,endNum=0;
-
-            while ((input = br.readLine()) != null){
-                lineNum++;
-                if (input.startsWith("@ARTICLE{")){
-                    occurNum = lineNum;
-                    indexBegin.add(occurNum);
-                }
-
-                if (input.endsWith("}")){
-                    endNum = lineNum;
-                    indexEnd.add(endNum);
-                }
-
-            }
-
-            /*for(int i=0;i<indexBegin.size();i++){
-                System.out.print("Begin Index (@ARTICLE): " + indexBegin.get(i) + "\n"
-                + "End index: " + indexEnd.get(i) + "\n");
-                System.out.println("*****************");
-            } */
-        }catch (IOException e){
-            System.out.println(e);
-        }
-    }
-
-    public void extractInfo(int startIndex, int endIndex){
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            String lines;
-            String content = "";
-
-            int lineNumber=0;
-
-            while ((lines=br.readLine()) != null){
-                lineNumber++;
-
-                if(lineNumber >=startIndex && lineNumber <= endIndex){
-                    content = content + lines;
-                }
-            }
-
-            contentList.add(content);
-
-        }catch (IOException e){
-            System.out.println(e);
-        }
-    }
-
-    public void saveInfoInMap(String input){
-        String[] InputList= input.split(",");
-
-        for(String s : InputList){
-            if(s.contains("=")){
-                int indexOfEqual = s.indexOf('=');
-                String key = s.substring(0,indexOfEqual);
-                String value = s.substring((s.indexOf('{')+1),s.indexOf('}'));
-
-
-            }
-        }
-
-
-
-    }
 
     public static void main(String[] args) {
-        new BibCreator();
+        Scanner kb = new Scanner(System.in);
+        List<String> inputFileList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            inputFileList.add("Latex" + (i+1)+".bib");
+        }
+
+        Scanner[] scanners = new Scanner[10];
+
+        System.out.println("Welcome to BibCreator");
+        // open files
+        String fileName = "";
+        for (int i = 0; i < inputFileList.size(); i++) {
+            try{
+                fileName = inputFileList.get(i);
+                scanners[i] = new Scanner(new File(fileName));
+            } catch (FileNotFoundException e){
+                System.out.println("Could not open input file " + fileName + " for reading.");
+                System.out.println();
+                System.out.println("Please check if file exists! Program will terminate after closing any opened files.");
+                // close opened files and exit the system
+                for (int j = 0; j < i; j++) {
+                    scanners[j].close();
+                }
+                System.exit(0);
+            }
+
+        }
+
+        PrintWriter[] pwIEEEs = new PrintWriter[10];
+        PrintWriter[] pwACMs = new PrintWriter[10];
+        PrintWriter[] pwNJs = new PrintWriter[10];
+
+        List<File> IEEE_file_Output_List = new ArrayList<>();
+        List<File> ACM_file_Output_List = new ArrayList<>();
+        List<File> NJ_file_Output_List = new ArrayList<>();
+
+        String IEEE_file, ACM_file, NJ_file;
+        boolean flagOfIEEE = false, flagOfACM = false, flagOfNJ = false;
+        for (int i = 0; i < 10; i++) {
+            IEEE_file = "IEEE" + (i + 1) + ".json";
+            ACM_file = "ACM" + (i + 1) + ".json";
+            NJ_file = "NJ" + (i + 1) + ".json";
+
+            try{
+                pwIEEEs[i] = new PrintWriter(new FileOutputStream(IEEE_file));
+                File IEEEFile = new File(IEEE_file);
+                IEEE_file_Output_List.add(IEEEFile);
+                flagOfIEEE = true;
+
+                pwACMs[i] = new PrintWriter(new FileOutputStream(ACM_file));
+                File ACMFile = new File(ACM_file);
+                ACM_file_Output_List.add(ACMFile);
+                flagOfACM = true;
+
+                pwNJs[i] = new PrintWriter(new FileOutputStream(NJ_file));
+                File NJFile = new File(NJ_file);
+                NJ_file_Output_List.add(NJFile);
+                flagOfNJ = true;
+
+            }catch (FileNotFoundException e){
+                // close all the PrintWriter
+                if(!flagOfIEEE){
+                    System.out.println("!! ** The " + IEEE_file + " can not be opened/created for writing! ** !!");
+                    for (int j = 0; j < i; j++) {
+                        pwIEEEs[j].close();
+                        pwACMs[j].close();
+                        pwNJs[j].close();
+                    }
+                } else if(!flagOfACM){
+                    System.out.println("!! ** The " + ACM_file + " can not be opened/created for writing! ** !!");
+                    // whole ACM file can not be opened, the output IEEE file already has been created.
+                        pwIEEEs[0].close();
+                    for (int j = 0; j < i; j++) {
+                        pwIEEEs[j + 1].close();
+                        pwACMs[j].close();
+                        pwNJs[j].close();
+                    }
+                } else if(!flagOfNJ){
+                    System.out.println("!! ** The " + NJ_file + " can not be opened/created for writing! ** !!");
+                    // whole ACM file can not be opened, the output IEEE file already has been created.
+                    pwIEEEs[0].close();
+                    pwACMs[0].close();
+                    for (int j = 0; j < i; j++) {
+                        pwIEEEs[j + 1].close();
+                        pwACMs[ j + 1].close();
+                        pwNJs[j].close();
+                    }
+                }
+
+                System.out.println("Error Occurred! All of the output files will be deleted");
+
+                for (File files: IEEE_file_Output_List) {
+                    files.delete();
+                }
+                for (File files: ACM_file_Output_List) {
+                    files.delete();
+                }for (File files: NJ_file_Output_List) {
+                    files.delete();
+                }
+
+                System.out.println("Program will be terminated");
+                for (Scanner s: scanners) {
+                    s.close();
+                }
+
+                System.exit(0);
+            }
+
+            System.out.println("Please enter the name of one of the files you need to review: ");
+            String fileNameFromKB = kb.nextLine();
+            try{
+                displayFileContent(new BufferedReader(new FileReader(fileNameFromKB)),fileNameFromKB);
+            }catch (FileNotFoundException e){
+                System.out.println("Could not open input file. File does not exist. Pleas try again!");
+                System.out.println("Please enter the name of one of the files you need to review: ");
+                fileNameFromKB = kb.nextLine();
+                try{
+                    displayFileContent(new BufferedReader(new FileReader(fileNameFromKB)),fileNameFromKB);
+                }catch (FileNotFoundException fe){
+                    System.out.println("Could not open input file. File does not exist. Pleas try again!");
+                    System.out.println("Sorry i can not get the correct file to display");
+                    System.exit(0);
+                }catch (IOException ie){
+                    System.out.println("Error: An error has occurred while reading from the " + fileNameFromKB + " file.");
+                    System.out.println("Program will be terminated");
+                    System.exit(0);
+                }
+            }catch (IOException e){
+                System.out.println("Error: An error has occurred while reading from the " + fileNameFromKB + " file.");
+                System.out.println("Program will be terminated");
+                System.exit(0);
+            }
+
+
+        }
+
+
+    }
+
+    static void displayFileContent(BufferedReader br, String fileName) throws IOException {
+        System.out.println("Here are the contents of the successfully created Json file: " + fileName);
+        String s = br.readLine();
+        while (s != null){
+            System.out.println(s);
+            s = br.readLine();
+        }
+
+        br.close();
     }
 
     }
