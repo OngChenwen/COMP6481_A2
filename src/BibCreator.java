@@ -170,7 +170,7 @@ public class BibCreator {
             String[] article = content.split("@ARTICLE");
             String fileName = file.get(i);
             for(int j = 1; j< article.length; j++){
-                String IEEE = null, ACM = null, NJ = null;
+                String IEEE , ACM , NJ ;
                 String IEEEAuthor = null, ACMAuthor = null, NJAuthor = null;
                 String thisAuthor = null;
                 String thisTitle = null;
