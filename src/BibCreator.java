@@ -4,6 +4,7 @@ import Exception.FileInvalidException;
 
 
 public class BibCreator {
+    static int counter = 10;
 
     public static void main(String[] args) {
         Scanner kb = new Scanner(System.in);
@@ -165,7 +166,7 @@ public class BibCreator {
             while(sc[i].hasNextLine()){
                 content = content + sc[i].nextLine();
             }
-            // split articles from each file.
+            // Split articles from each file.
             String[] article = content.split("@ARTICLE");
             String fileName = file.get(i);
             for(int j = 1; j< article.length; j++){
@@ -183,6 +184,7 @@ public class BibCreator {
                 String thisDoi = null;
                 String thisKeywords = null;
                 String[] item = article[j].split("\\},");
+                // Split individual items from each article.
                 for (int k=0; k< item.length; k++){
                     String[] itemDetail = item[k].split("=\\{",-1);
                     if(itemDetail[0].equals("author")){
@@ -335,10 +337,41 @@ public class BibCreator {
                         }
                         continue;
                     }
+                    // Once catch FileInvalidException, isValid is false, break the loop.
+                    if (!isValid) {
+                        break;
+                    } else {
+                        IEEE = IEEEAuthor +" \"" + thisTitle + "\", " + thisJournal + ", vol. " + thisVolume + ", no. " + thisNumber +", p. "+ thisPages + ", " + thisMonth +" "+thisYear +"." ;
+                        ACM = "["+ j +"] "+ ACMAuthor + thisYear+". "+ thisTitle + ". " + thisJournal + ". " + thisVolume + ", " + thisNumber + " (" + thisYear + "), "+ thisPages + ". " + thisDoi +"." ;
+                        NJ = NJAuthor + thisTitle +". " + thisJournal + ". " + thisVolume + ", " + thisPages + "("+thisYear +").";
+                        pwIEEEs[i].println(IEEE);
+                        pwIEEEs[i].println();
+                        pwACMs[i].println(ACM);
+                        pwACMs[i].println();
+                        pwNJs[i].println(NJ);
+                        pwNJs[i].println();
+                    }
+
+                }
+                // Once FileInvalidException is thrown, the corresponding output file is deleted
+                if (!isValid) {
+                    counter--;
+                    pwIEEEs[i].close();
+                    pwACMs[i].close();
+                    pwNJs[i].close();
+                    IEEE_file_Output_List.get(i).delete();
+                    ACM_file_Output_List.get(i).delete();
+                    NJ_file_Output_List.get(i).delete();
+                }
+                sc[i].close();
+                pwIEEEs[i].close();
+                pwACMs[i].close();
+                pwNJs[i].close();
+
                 }
             }
         }
-    }
+    // Display message as required.
     static void displayErrorMessage(String fileName, FileInvalidException e, String[] itemDetail) {
         System.out.println(e.getMessage());
         System.out.println("--------------------------------");
@@ -348,4 +381,5 @@ public class BibCreator {
                             + "Other empty fields may be present as well!" + '\n');
     }
     }
+
 
