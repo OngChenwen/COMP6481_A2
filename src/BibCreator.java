@@ -115,6 +115,11 @@ public class BibCreator {
                 System.exit(0);
             }
 
+            processFilesForValidation(scanners, pwIEEEs, pwACMs, pwNJs, IEEE_file_Output_List, ACM_file_Output_List, NJ_file_Output_List, inputFileList);
+
+            System.out.print("A total of " + (10 - counter)  + " files were invalid, and could not be processed.");
+            System.out.println(" All other " + counter + " \"Valid\" files have been created.\n");
+
             System.out.println("Please enter the name of one of the files you need to review: ");
             String fileNameFromKB = kb.nextLine();
             try{
