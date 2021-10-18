@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import Exception.FileInvalidException;
 
 
 public class BibCreator {
@@ -154,6 +155,197 @@ public class BibCreator {
 
         br.close();
     }
+    static void processFilesForValidation(Scanner[] sc, PrintWriter[] pwIEEEs, PrintWriter[] pwACMs,
+                                          PrintWriter[] pwNJs, List<File> IEEE_file_Output_List, List<File> ACM_file_Output_List,
+                                        List<File> NJ_file_Output_List,List<String> file){
+        // Scan all input files
+        for(int i =0; i<10; i++){
+            String content = null;
+            boolean isValid = true;
+            while(sc[i].hasNextLine()){
+                content = content + sc[i].nextLine();
+            }
+            // split articles from each file.
+            String[] article = content.split("@ARTICLE");
+            String fileName = file.get(i);
+            for(int j = 1; j< article.length; j++){
+                String IEEE = null, ACM = null, NJ = null;
+                String IEEEAuthor = null, ACMAuthor = null, NJAuthor = null;
+                String thisAuthor = null;
+                String thisTitle = null;
+                String thisJournal = null;
+                String thisVolume = null;
+                String thisNumber = null;
+                String thisPages = null;
+                String thisMonth = null;
+                String thisYear = null;
+                String thisISSN = null;
+                String thisDoi = null;
+                String thisKeywords = null;
+                String[] item = article[j].split("\\},");
+                for (int k=0; k< item.length; k++){
+                    String[] itemDetail = item[k].split("=\\{",-1);
+                    if(itemDetail[0].equals("author")){
+                        try{
+                            thisAuthor = itemDetail[1];
+                            if (thisAuthor.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            } else {
+                                IEEEAuthor =  thisAuthor.replace(" and", ",") +".";
+                                ACMAuthor = thisAuthor.split("and")[0]+"et al. ";
+                                NJAuthor =  thisAuthor.replace("and", "&") +". ";
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                        }
+                    if(itemDetail[0].equals("title")){
+                        try {
+                            thisTitle = itemDetail[1];
+                            if (thisTitle.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("year")){
+                        try {
+                            thisYear = itemDetail[1];
+                            if (thisYear.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("journal")){
+                        try {
+                            thisJournal = itemDetail[1];
+                            if (thisJournal.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("volume")){
+                        try {
+                            thisVolume = itemDetail[1];
+                            if (thisVolume.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("number")){
+                        try {
+                            thisNumber = itemDetail[1];
+                            if (thisNumber.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("pages")){
+                        try {
+                            thisPages = itemDetail[1];
+                            if (thisPages.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("month")){
+                        try {
+                            thisMonth = itemDetail[1];
+                            if (thisMonth.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("ISSN")){
+                        try {
+                            thisISSN = itemDetail[1];
+                            if (thisISSN.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("keywords")){
+                        try {
+                            thisKeywords = itemDetail[1];
+                            if (thisKeywords.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            }
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(itemDetail[0].equals("doi")) {
+                        try {
+                            thisDoi = itemDetail[1];
+                            if (thisDoi.length() == 0) {
+                                throw new FileInvalidException("Error: Detected Empty Field!");
+                            } else {
+                                thisDoi = "DOI:https://doi.org/" +  thisDoi;
+                            }
 
+                        } catch (FileInvalidException e) {
+                            displayErrorMessage(fileName, e, itemDetail);
+                            isValid = false;
+                            break;
+                        }
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    static void displayErrorMessage(String fileName, FileInvalidException e, String[] itemDetail) {
+        System.out.println(e.getMessage());
+        System.out.println("--------------------------------");
+        System.out.println();
+        System.out.println("Problem detected with input file: "+ fileName);
+        System.out.println("Field is Invalid: Field \"" + itemDetail[0] + "\" is Empty. Processing stopped at this point. "
+                            + "Other empty fields may be present as well!" + '\n');
+    }
     }
 
