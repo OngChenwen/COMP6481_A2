@@ -97,7 +97,7 @@ public class BibCreator {
                 }
 
                 System.out.println("Error Occurred! All of the output files will be deleted");
-
+                // Error occurred delete all output files
                 for (File files: IEEE_file_Output_List) {
                     files.delete();
                 }
@@ -153,6 +153,7 @@ public class BibCreator {
     }
 
     static void displayFileContent(BufferedReader br, String fileName) throws IOException {
+        System.out.println("=============================================================");
         System.out.println("Here are the contents of the successfully created Json file: " + fileName);
         String s = br.readLine();
         while (s != null){
