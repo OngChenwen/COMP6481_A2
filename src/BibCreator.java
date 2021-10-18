@@ -21,7 +21,7 @@ public class BibCreator {
         for (int i = 0; i < inputFileList.size(); i++) {
             try{
                 fileName = inputFileList.get(i);
-                scanners[i] = new Scanner(new FileInputStream(fileName));
+                scanners[i] = new Scanner(new FileInputStream("src/Files/" + fileName));
             } catch (FileNotFoundException e){
                 System.out.println("Could not open input file " + fileName + " for reading.");
                 System.out.println();
@@ -193,8 +193,8 @@ public class BibCreator {
                 // Split individual items from each article.
                 for (int k=0; k< item.length; k++){
                     String term = getFirstWord(item[k]);
+                    String[] itemDetail = item[k].split("=\\{", -1);
                     if(term.equals("author")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                             try{
                                 thisAuthor = itemDetail[1];
                                 if (thisAuthor.length() == 0) {
@@ -212,7 +212,6 @@ public class BibCreator {
                             continue;
                     }
                     if(term.equals("journal")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisJournal = itemDetail[1];
                             if (thisJournal.length() == 0) {
@@ -226,7 +225,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("title")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisTitle = itemDetail[1];
                             if (thisTitle.length() == 0) {
@@ -240,7 +238,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("year")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisYear = itemDetail[1];
                             if (thisYear.length() == 0) {
@@ -255,7 +252,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("volume")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisVolume = itemDetail[1];
                             if (thisVolume.length() == 0) {
@@ -269,7 +265,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("number")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisNumber = itemDetail[1];
                             if (thisNumber.length() == 0) {
@@ -283,7 +278,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("pages")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisPages = itemDetail[1];
                             if (thisPages.length() == 0) {
@@ -297,7 +291,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("keywords")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisKeywords = itemDetail[1];
                             if (thisKeywords.length() == 0) {
@@ -311,7 +304,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("month")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisMonth = itemDetail[1];
                             if (thisMonth.length() == 0) {
@@ -325,7 +317,6 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("ISSN")){
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisISSN = itemDetail[1];
                             if (thisISSN.length() == 0) {
@@ -340,7 +331,6 @@ public class BibCreator {
                     }
 
                     if(term.equals("doi")) {
-                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisDoi = itemDetail[1];
                             if (thisDoi.length() == 0) {
@@ -354,7 +344,6 @@ public class BibCreator {
                             isValid = false;
                             break;
                         }
-                        continue;
                     }
                 }
                     if (!isValid) {
@@ -364,7 +353,7 @@ public class BibCreator {
                         IEEE = IEEEAuthor +" \"" + thisTitle + "\", " + thisJournal + ", vol. " + thisVolume + ", no. " + thisNumber +", p. "+ thisPages + ", " + thisMonth +" "+thisYear +"." ;
                         ACM = "["+ j +"] "+ ACMAuthor + thisYear+". "+ thisTitle + ". " + thisJournal + ". " + thisVolume + ", " + thisNumber + " (" + thisYear + "), "+ thisPages + ". " + thisDoi +"." ;
                         NJ = NJAuthor + thisTitle +". " + thisJournal + ". " + thisVolume + ", " + thisPages + "("+thisYear +").";
-                        System.out.println(IEEE);
+//                        System.out.println(IEEE);
                         pwIEEEs[i].println(IEEE);
                         pwIEEEs[i].println();
                         pwACMs[i].println(ACM);
@@ -393,24 +382,22 @@ public class BibCreator {
 
         }
     static String getFirstWord(String line) {
-        String term = null;
-        int start = 0;
-        int end = 0;
-        int k = 0;
-        for (k = 0; k < line.length(); k++) {
-            if (Character.isLetter(line.charAt(k))) {
-                start = k;
+        int start = 0, end = 0,k = 0;
+
+        for (int i = 0; i < line.length(); i++) {
+            if (Character.isLetter(line.charAt(i))) {
+                start = i;
+                k = i;
                 break;
             }
         }
-        for (; k < line.length(); k++) {
-            if (!Character.isLetter(line.charAt(k))) {
-                end = k;
+        for (int j = k; j < line.length(); j++) {
+            if (!Character.isLetter(line.charAt(j))) {
+                end = j;
                 break;
             }
         }
-        term = line.substring(start, end);
-        return term;
+        return line.substring(start, end);
     }
     // Display message as required.
     static void displayErrorMessage(String fileName, FileInvalidException e, String term) {
