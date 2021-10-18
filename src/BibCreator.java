@@ -372,7 +372,7 @@ public class BibCreator {
                         pwNJs[i].println(NJ);
                         pwNJs[i].println();
                     }
-
+            }
 
                 // Once FileInvalidException is thrown, the corresponding output file is deleted
                 if (!isValid) {
@@ -390,7 +390,7 @@ public class BibCreator {
                 pwNJs[i].close();
 
                 }
-            }
+
         }
     static String getFirstWord(String line) {
         String term = null;
