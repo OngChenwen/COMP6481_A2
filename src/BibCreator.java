@@ -1,11 +1,18 @@
 import java.io.*;
 import java.util.*;
 import Exception.FileInvalidException;
-
-
+/**
+ * This class is s read and process a given .bib file and create 3 different files
+ * with the correct reference formats for IEEE, ACM and NJ.
+ * @author ChenWen Wang()
+ * @author Geer Jiang(40120125)
+ */
 public class BibCreator {
     static int counter = 10;
-
+    /**
+     * This method reads the input file, and create output files for 3 reference formats.
+     * @param args Unused.
+     */
     public static void main(String[] args) {
         Scanner kb = new Scanner(System.in);
         List<String> inputFileList = new ArrayList<>();
@@ -21,7 +28,7 @@ public class BibCreator {
         for (int i = 0; i < inputFileList.size(); i++) {
             try{
                 fileName = inputFileList.get(i);
-                scanners[i] = new Scanner(new FileInputStream("src/Files/" + fileName));
+                scanners[i] = new Scanner(new FileInputStream(fileName));
             } catch (FileNotFoundException e){
                 System.out.println("Could not open input file " + fileName + " for reading.");
                 System.out.println();
@@ -97,7 +104,7 @@ public class BibCreator {
                 }
 
                 System.out.println("Error Occurred! All of the output files will be deleted");
-                // Error occurred delete all output files
+
                 for (File files: IEEE_file_Output_List) {
                     files.delete();
                 }
@@ -152,8 +159,12 @@ public class BibCreator {
 
     }
 
+    /**
+     * This method display the contents of the specified output file.
+     * @param br Buffered reader which is used to read the file.
+     * @param fileName The value of input string, which is used to find the specified file.
+     */
     static void displayFileContent(BufferedReader br, String fileName) throws IOException {
-        System.out.println("=============================================================");
         System.out.println("Here are the contents of the successfully created Json file: " + fileName);
         String s = br.readLine();
         while (s != null){
@@ -163,6 +174,19 @@ public class BibCreator {
 
         br.close();
     }
+
+    /**
+     * This method is used to process input files and formats them. If they are valid, generate the output files.
+     * If not, close and delete the invalid one.
+     * @param sc Scan all the input files.
+     * @param pwIEEEs print writer to process the IEEE formats file.
+     * @param pwACMs print writer to process the ACM formats file.
+     * @param pwNJs print writer to process the NJ formats file.
+     * @param IEEE_file_Output_List List that is used to store IEEE formats files.
+     * @param ACM_file_Output_List List that is used to store ACM formats files.
+     * @param NJ_file_Output_List List that is used to store NJ formats files.
+     * @param inputFileList List that is used to store input files.
+     */
     static void processFilesForValidation(Scanner[] sc, PrintWriter[] pwIEEEs, PrintWriter[] pwACMs,
                                           PrintWriter[] pwNJs, List<File> IEEE_file_Output_List, List<File> ACM_file_Output_List,
                                         List<File> NJ_file_Output_List,List<String> inputFileList){
@@ -194,8 +218,8 @@ public class BibCreator {
                 // Split individual items from each article.
                 for (int k=0; k< item.length; k++){
                     String term = getFirstWord(item[k]);
-                    String[] itemDetail = item[k].split("=\\{", -1);
                     if(term.equals("author")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                             try{
                                 thisAuthor = itemDetail[1];
                                 if (thisAuthor.length() == 0) {
@@ -213,6 +237,7 @@ public class BibCreator {
                             continue;
                     }
                     if(term.equals("journal")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisJournal = itemDetail[1];
                             if (thisJournal.length() == 0) {
@@ -226,6 +251,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("title")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisTitle = itemDetail[1];
                             if (thisTitle.length() == 0) {
@@ -239,6 +265,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("year")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisYear = itemDetail[1];
                             if (thisYear.length() == 0) {
@@ -253,6 +280,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("volume")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisVolume = itemDetail[1];
                             if (thisVolume.length() == 0) {
@@ -266,6 +294,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("number")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisNumber = itemDetail[1];
                             if (thisNumber.length() == 0) {
@@ -279,6 +308,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("pages")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisPages = itemDetail[1];
                             if (thisPages.length() == 0) {
@@ -292,6 +322,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("keywords")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisKeywords = itemDetail[1];
                             if (thisKeywords.length() == 0) {
@@ -305,6 +336,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("month")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisMonth = itemDetail[1];
                             if (thisMonth.length() == 0) {
@@ -318,6 +350,7 @@ public class BibCreator {
                         continue;
                     }
                     if(term.equals("ISSN")){
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisISSN = itemDetail[1];
                             if (thisISSN.length() == 0) {
@@ -332,6 +365,7 @@ public class BibCreator {
                     }
 
                     if(term.equals("doi")) {
+                        String[] itemDetail = item[k].split("=\\{", -1);
                         try {
                             thisDoi = itemDetail[1];
                             if (thisDoi.length() == 0) {
@@ -345,6 +379,7 @@ public class BibCreator {
                             isValid = false;
                             break;
                         }
+                        continue;
                     }
                 }
                     if (!isValid) {
@@ -354,7 +389,7 @@ public class BibCreator {
                         IEEE = IEEEAuthor +" \"" + thisTitle + "\", " + thisJournal + ", vol. " + thisVolume + ", no. " + thisNumber +", p. "+ thisPages + ", " + thisMonth +" "+thisYear +"." ;
                         ACM = "["+ j +"] "+ ACMAuthor + thisYear+". "+ thisTitle + ". " + thisJournal + ". " + thisVolume + ", " + thisNumber + " (" + thisYear + "), "+ thisPages + ". " + thisDoi +"." ;
                         NJ = NJAuthor + thisTitle +". " + thisJournal + ". " + thisVolume + ", " + thisPages + "("+thisYear +").";
-//                        System.out.println(IEEE);
+                        System.out.println(IEEE);
                         pwIEEEs[i].println(IEEE);
                         pwIEEEs[i].println();
                         pwACMs[i].println(ACM);
@@ -382,25 +417,39 @@ public class BibCreator {
                 }
 
         }
-    static String getFirstWord(String line) {
-        int start = 0, end = 0,k = 0;
 
-        for (int i = 0; i < line.length(); i++) {
-            if (Character.isLetter(line.charAt(i))) {
-                start = i;
-                k = i;
+    /**
+     *This method is used in processFilesForValidation method to get the first name of a string.
+     * @param line The original string that need to be processed.
+     * @return The value of desired first term.
+     */
+    static String getFirstWord(String line) {
+        String term = null;
+        int start = 0;
+        int end = 0;
+        int k = 0;
+        for (k = 0; k < line.length(); k++) {
+            if (Character.isLetter(line.charAt(k))) {
+                start = k;
                 break;
             }
         }
-        for (int j = k; j < line.length(); j++) {
-            if (!Character.isLetter(line.charAt(j))) {
-                end = j;
+        for (; k < line.length(); k++) {
+            if (!Character.isLetter(line.charAt(k))) {
+                end = k;
                 break;
             }
         }
-        return line.substring(start, end);
+        term = line.substring(start, end);
+        return term;
     }
-    // Display message as required.
+
+    /**
+     * This method is used in processFilesForValidation method to format the system output of FileInvalidException.
+     * @param fileName String of input file name.
+     * @param e FileInvalidException
+     * @param term the first word of processing string.
+     */
     static void displayErrorMessage(String fileName, FileInvalidException e, String term) {
         System.out.println(e.getMessage());
         System.out.println("--------------------------------");
