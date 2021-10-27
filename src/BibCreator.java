@@ -28,7 +28,7 @@ public class BibCreator {
         for (int i = 0; i < inputFileList.size(); i++) {
             try{
                 fileName = inputFileList.get(i);
-                scanners[i] = new Scanner(new FileInputStream(fileName));
+                scanners[i] = new Scanner(new FileInputStream( "src/Files/"+ fileName));
             } catch (FileNotFoundException e){
                 System.out.println("Could not open input file " + fileName + " for reading.");
                 System.out.println();
@@ -389,7 +389,6 @@ public class BibCreator {
                         IEEE = IEEEAuthor +" \"" + thisTitle + "\", " + thisJournal + ", vol. " + thisVolume + ", no. " + thisNumber +", p. "+ thisPages + ", " + thisMonth +" "+thisYear +"." ;
                         ACM = "["+ j +"] "+ ACMAuthor + thisYear+". "+ thisTitle + ". " + thisJournal + ". " + thisVolume + ", " + thisNumber + " (" + thisYear + "), "+ thisPages + ". " + thisDoi +"." ;
                         NJ = NJAuthor + thisTitle +". " + thisJournal + ". " + thisVolume + ", " + thisPages + "("+thisYear +").";
-                        System.out.println(IEEE);
                         pwIEEEs[i].println(IEEE);
                         pwIEEEs[i].println();
                         pwACMs[i].println(ACM);
@@ -424,10 +423,10 @@ public class BibCreator {
      * @return The value of desired first term.
      */
     static String getFirstWord(String line) {
-        String term = null;
+        String term;
         int start = 0;
         int end = 0;
-        int k = 0;
+        int k;
         for (k = 0; k < line.length(); k++) {
             if (Character.isLetter(line.charAt(k))) {
                 start = k;
