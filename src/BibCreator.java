@@ -4,7 +4,7 @@ import Exception.FileInvalidException;
 /**
  * This class is s read and process a given .bib file and create 3 different files
  * with the correct reference formats for IEEE, ACM and NJ.
- * @author ChenWen Wang()
+ * @author ChenWen Wang(40119782)
  * @author Geer Jiang(40120125)
  */
 public class BibCreator {
